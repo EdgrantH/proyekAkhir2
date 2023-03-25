@@ -219,7 +219,7 @@ bool read_flight_data(){
 
 	//return false if file doesn't exist
 	if (fptr == NULL) return false;
-	
+	//tes
 	
 }
 
