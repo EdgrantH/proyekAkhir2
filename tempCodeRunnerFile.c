@@ -1,1 +1,0 @@
-colorPreference = read_settings();

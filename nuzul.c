@@ -40,6 +40,8 @@ int partition(Concert arr[], int low, int high);
 void quickSort(Concert arr[], int low, int high);
 int partitionStr(Concert arr[], int low, int high);
 void quickSortStr(Concert arr[], int low, int high);
+int binary_search(Concert names[], int n, char* search);
+int binary_search_start(char *x, char *y);
 void settings(int colorPreference);
 int read_settings();
 void write_settings(int input);
@@ -48,12 +50,13 @@ int home(int colorPreference);
 int ask_for_menu(int colorPreference, char *title, char *choice1, char *choice2, char *choice3, char *choice4);
 void set_concert_data(Concert *Concerts);
 void display_concert_data(int colorPreference, Concert *Concerts, int dataAmmount);
+void concert_data(Concert *Concerts, int dataAmmount);
 
 enum color {BLUE, RED, GREEN, YELLOW};
 // 
 int main()
 {
-    int i, colorPreference, input = 0, concertAmmount = 4;
+    int i, colorPreference, input = 0, concertAmmount = 10;
 	bool firstLoop = true;
 	Concert Concerts[50];//kalau ada waktu ini bikin dynamic memori
 	intro();
@@ -76,20 +79,86 @@ int main()
 				break;
 				
 			case(2):
-				input = ask_for_menu(colorPreference, "Ticket Display", "sort by name", "sort by price", "search name", "exit");
+				input = ask_for_menu(colorPreference, "Ticket Display", "Ticket List", "Search the Ticket", "Buy Ticket", "Buy History");
 				switch (input){
 					case (1):
-						quickSortStr(Concerts, 0, concertAmmount);
-						display_concert_data(colorPreference, Concerts, concertAmmount);
-						break;
-					
+						input = ask_for_menu(colorPreference, "Ticket", "List", "Sort by Concert Name", "Sort by Price", "exit");
+						switch (input){
+							case (1):
+								display_concert_data(colorPreference, Concerts, concertAmmount);
+							break;
+
+							case (2):
+								quickSortStr(Concerts, 0, concertAmmount);
+								display_concert_data(colorPreference, Concerts, concertAmmount);
+								break;
+
+							case (3):
+								quickSort(Concerts, 0, concertAmmount);
+								display_concert_data(colorPreference, Concerts, concertAmmount);
+								break;
+
+							case (4):
+								
+								break;
+
+							default:
+								resetScreen(RED);
+								box('=', '|', 60, 3);
+								gotoxy(3,2);
+								center_print ("Inputan Salah, silahkan input ulang", 60);
+								gotoxy(1,4);
+								getch();
+								getchar();
+								break;
+						}		
+
 					case (2):
-						quickSort(Concerts, 0, concertAmmount);
-						display_concert_data(colorPreference, Concerts, concertAmmount);
+						input = ask_for_menu(colorPreference, "Ticket", "Search by Concert Name", "Search by Artist Name", 0, 0);
+						switch (input){
+							case (1):
+								clear();
+								concert_data(Concerts, concertAmmount);
+
+								char search_word[100];
+								printf("Masukkan kata kunci : ");
+								scanf(" %[^\n]", search_word);
+
+								quickSortStr(Concerts, 0, concertAmmount);
+								int index = binary_search(Concerts, 10, search_word);
+
+								if(index == -1)
+									printf("Tidak ada nama yang ditemukan.\n");
+								else
+									printf("Nama yang ditemukan: %s\n", Concerts[index].namaKonser);
+
+								getch();
+								break;
+
+							case (2):
+								quickSortStr(Concerts, 0, concertAmmount);
+								display_concert_data(colorPreference, Concerts, concertAmmount);
+								break;
+
+							case (3):
+								quickSort(Concerts, 0, concertAmmount);
+								display_concert_data(colorPreference, Concerts, concertAmmount);
+								break;
+
+							default:
+								resetScreen(RED);
+								box('=', '|', 60, 3);
+								gotoxy(3,2);
+								center_print ("Inputan Salah, silahkan input ulang", 60);
+								gotoxy(1,4);
+								getch();
+								getchar();
+								break;
+						}					
 						break;
 					
 					case (3):
-						//searching
+						
 						break;
 					
 					case (4):
@@ -318,7 +387,14 @@ int ask_for_menu(int colorPreference, char *title, char *choice1, char *choice2,
 	gotoxy(3,3);
 	center_print (title, 80);
 	gotoxy(1, 6);
-	box('-', '|', 80, 7);
+
+	if (choice4 != 0){
+		box('=', '|', 80, 7);
+	}
+	else {
+		box('=', '|', 80, 6);
+	}
+
 	gotoxy(3, 7);
 	printf ("Pemilihan Selanjutnya");
 	gotoxy(3, 8);
@@ -326,11 +402,16 @@ int ask_for_menu(int colorPreference, char *title, char *choice1, char *choice2,
 	gotoxy(3, 9);
 	printf ("2. %s", choice2);
 	gotoxy(3, 10);
-	printf ("3. %s", choice3);
+	printf ("3. %s", choice3);	
+
+	if (choice4 != 0){
 	gotoxy(3, 11);
 	printf ("4. %s", choice4);
-	
-	gotoxy(3, 13);
+	gotoxy(0, 13);
+	}
+	else
+	gotoxy(0, 12);
+
 	scanf ("%d", &input);
 
 	return input;
@@ -340,7 +421,13 @@ void set_concert_data(Concert *Concerts){
 	setData(0, "Concert A", 9.2);
 	setData(1, "Concert B", 3.5);
 	setData(2, "Concert C", 12.7);
-	setData(3, "Concert D", 5.8);
+	setData(3, "Concert D", 3.8);
+	setData(4, "Concert E", 9.8);
+	setData(5, "Concert F", 4.7);
+	setData(6, "Concert G", 15.6);
+	setData(7, "Concert H", 17.4);
+	setData(8, "Concert I", 3.2);
+	setData(9, "Concert J", 12.1);
 }
 
 void display_concert_data(int colorPreference, Concert *Concerts, int dataAmmount){
@@ -359,4 +446,35 @@ void display_concert_data(int colorPreference, Concert *Concerts, int dataAmmoun
 	}
 	printdup('-', 60);
 	getch();
+}
+
+void concert_data(Concert *Concerts, int dataAmmount){
+	int i, j;
+	for (j = 0; j < dataAmmount; j++) {
+	Concerts[j].namaKonser;
+	Concerts[j].harga;
+	}
+}
+
+int binary_search(Concert Concerts[], int n, char* search){
+	int low = 0, high = n - 1;
+    while(low <= high) {
+        int mid = (low + high) / 2;
+        if(binary_search_start(Concerts[mid].namaKonser, search))
+            return mid;
+        else if(strcmp(Concerts[mid].namaKonser, search) < 0)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return -1;
+}
+
+int binary_search_start(char *x, char *y){
+    int i;
+    for(i = 0; y[i] != '\0'; i++) {
+        if(x[i] != y[i])
+            return 0;
+    }
+    return 1;
 }
