@@ -19,10 +19,10 @@
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
 
 //mengprint karakter x sebanyak y kali, dalam python ini adalah print("x"*y)
-#define printdup(x, y) for(i = 0; i < y; i++) printf("%c", x); printf("\n");
+#define printdup(x, y) for(i = 0; i < y; i++) printf("%c", x); printf("\n")
 //mengprint karakter x yang mengimpin kosong dengan total panjang y
 #define printBorder(x, y) printf("%c", x); for(i = 0; i < y-2; i++) printf(" "); printf("%c\n", x)
-#define setData(i, y, z, a) strcpy(Concerts[i].namaKonser, y); Concerts[i].harga = z; strcpy(Concerts[i].namaArtist, a);
+#define setData(i, y, z, a) strcpy(Concerts[i].namaKonser, y); Concerts[i].harga = z; strcpy(Concerts[i].namaArtist, a)
 
 typedef struct{
 	char namaKonser[50];
@@ -67,7 +67,7 @@ int main(){
 	Concert Concerts[50];//kalau ada waktu ini bikin dynamic memori
 	intro();
 
-	while(input != 4){
+	while(1){
 		colorPreference = read_settings();
 		set_concert_data(Concerts);
 		quickSortStr(Concerts, 0, concertAmmount);
@@ -78,10 +78,22 @@ int main(){
 		}//ini ngeskip loop pertama, fungsinya agar display Concerts dapat benar, kalau gak index ke-0 akan diskip.
 
 		input = home(colorPreference);
+		/*==============================================================================
+		|                                                                              |
+		|                                       HOME                                   |
+		|                                                                              |
+		================================================================================
+		================================================================================
+		| Pemilihan Selanjutnya                                                        |
+		| 1. Help                                                                      |
+		| 2. Pick Concert                                                              |
+		| 3. Colour Settings                                                           |
+		| 4. Exit program                                                              |
+		==============================================================================*/
 
 		switch (input){
 			case(1):
-				clear();
+				resetScreen(colorPreference);
 				help();
 				break;
 
@@ -119,6 +131,7 @@ int main(){
 				center_print ("Terima kasih udah memakai program kita", 60);
 				gotoxy(1,4);
 				getch();
+				exit(0);
 				break;
 				
 			default:
@@ -363,16 +376,16 @@ int ask_for_menu(int colorPreference, char *title, char *choice1, char *choice2,
 }
 
 void set_concert_data(Concert *Concerts){
-	setData(0, "Concert A", 9.2, "J");
-	setData(1, "Concert B", 3.5, "I");
-	setData(2, "Concert C", 12.7, "H");
-	setData(3, "Concert D", 3.8, "G");
-	setData(4, "Concert E", 9.8, "F");
-	setData(5, "Concert F", 4.7, "E");
-	setData(6, "Concert G", 15.6, "D");
-	setData(7, "Concert H", 17.4, "C");
-	setData(8, "Concert I", 3.2, "B");
-	setData(9, "Concert J", 12.1, "A");
+	setData(0, "The Experience", 28.5, "Jimi ");
+	setData(1, "Reputation ", 45.2, "Taylor ");
+	setData(2, "The World ", 37.8, "Beyonce");
+	setData(3, "The Tour", 42.0, "Justin ");
+	setData(4, "A Dreams", 38.5, "Coldplay");
+	setData(5, "The Tree", 50.0, "U2");
+	setData(6, "The Wall", 29.9, "Roger");
+	setData(7, "The Born", 47.6,  "Gaga");
+	setData(8, "The Monster ", 34.8, "Eminem");
+	setData(9, "The Red Pill  ", 26.3, "Maroon 5");
 }
 
 void display_concert_data(int colorPreference, Concert *Concerts, int dataAmmount){
@@ -386,7 +399,7 @@ void display_concert_data(int colorPreference, Concert *Concerts, int dataAmmoun
 
 	printdup('-', 60);
 	printf ("%-15s %-15s %-11s\n", "Nama Concert", "Artis", "Harga");
-	for (j = 0; j < dataAmmount; j++) {
+	for (j = 1; j < dataAmmount; j++) {
 		printf ("%-15s %-15s Rp.%-11.1f\n", Concerts[j].namaKonser, Concerts[j].namaArtist, Concerts[j].harga);
 	}
 	printdup('-', 60);
@@ -460,7 +473,7 @@ void help(){
 	printdup('-', 60);
 
 	printf (
-		"| Mengenai Kuis.\n|\n"
+		"| Mengenai program.\n|\n"
 		"| Kuis ini merupakan  Tugas Pertengahan Pemrogramab Lanjut"
 		"\n| dengan dosen Pak Budi. Judul dari program ini adalah"
 		"\n| Program Pemesanan Tiket Konser. Tujuan dibuatnya"
@@ -523,7 +536,7 @@ int display_concert_ask_input(int colorPreference, Concert *Concerts, int dataAm
 	printdup('-', 60);
 	printf ("%2s %-15s %-12s %-11s\n","No.", "Nama Concert", "Artis", "Harga");
 	for (j = 0; j < dataAmmount; j++) {
-		printf ("%3d %-15s %-12s Rp.%-11.1f\n", j+1, Concerts[j].namaKonser, Concerts[j].namaArtist, Concerts[j].harga);
+		printf ("%3d %-15s %-12s Rp.%-11.1f\n", j + 1, Concerts[j].namaKonser, Concerts[j].namaArtist, Concerts[j].harga);
 	}
 	printdup('-', 60);
 	
